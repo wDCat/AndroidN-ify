@@ -12,6 +12,8 @@ import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 import tk.wasdennnoch.androidn_ify.systemui.notifications.StatusBarHeaderHooks;
 
+import java.io.InputStream;
+
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public class RomUtils {
 
@@ -27,6 +29,7 @@ public class RomUtils {
     public static void init(XSharedPreferences prefs) {
         sPrefs = prefs;
     }
+
     public static void initRemote() {
         Context context = (Context) XposedHelpers.callMethod(XposedHelpers.callStaticMethod(XposedHelpers.findClass("android.app.ActivityThread", null), "currentActivityThread"), "getSystemContext");
         sPrefs = new RemotePreferences(context, "tk.wasdennnoch.androidn_ify.PREFERENCES", "tk.wasdennnoch.androidn_ify_preferences");
@@ -75,6 +78,15 @@ public class RomUtils {
                 return true;
             default:
                 return false;
+        }
+    }
+
+    public static boolean isOxygenOS() {
+        try {
+            int buff = Runtime.getRuntime().exec("getprop ro.oxygen.version").getInputStream().read();
+            return 0x30 < buff && buff < 0x39;
+        } catch (Exception e) {
+            return false;
         }
     }
 

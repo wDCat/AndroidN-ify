@@ -70,10 +70,7 @@ import tk.wasdennnoch.androidn_ify.systemui.notifications.stack.NotificationStac
 import tk.wasdennnoch.androidn_ify.systemui.notifications.views.RemoteInputHelper;
 import tk.wasdennnoch.androidn_ify.systemui.qs.customize.QSCustomizer;
 import tk.wasdennnoch.androidn_ify.systemui.statusbar.StatusBarHooks;
-import tk.wasdennnoch.androidn_ify.utils.ConfigUtils;
-import tk.wasdennnoch.androidn_ify.utils.RemoteMarginLinearLayout;
-import tk.wasdennnoch.androidn_ify.utils.ResourceUtils;
-import tk.wasdennnoch.androidn_ify.utils.ViewUtils;
+import tk.wasdennnoch.androidn_ify.utils.*;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -655,7 +652,7 @@ public class NotificationHooks {
     private static final XC_MethodHook updateWindowWidthHHook = new XC_MethodHook() {
         @Override
         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-            if(ConfigUtils.OxygenOS)
+            if (RomUtils.isOxygenOS())
                 return;
             Dialog mDialog = (Dialog) XposedHelpers.getObjectField(param.thisObject, "mDialog");
             ViewGroup mDialogView = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mDialogView");

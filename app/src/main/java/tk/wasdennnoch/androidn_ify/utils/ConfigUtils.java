@@ -22,7 +22,7 @@ public class ConfigUtils {
 
     private static final String TAG = "ConfigUtils";
 
-    public static final boolean OxygenOS= System.getProperty("ro.oxygen.version") != null;
+
     public static final boolean M = Build.VERSION.SDK_INT >= 23;
     public static final boolean L1 = Build.VERSION.SDK_INT >= 22;
     public static boolean EXPERIMENTAL;
