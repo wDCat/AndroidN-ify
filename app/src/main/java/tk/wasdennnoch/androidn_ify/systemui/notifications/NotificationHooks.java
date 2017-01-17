@@ -655,6 +655,9 @@ public class NotificationHooks {
     private static final XC_MethodHook updateWindowWidthHHook = new XC_MethodHook() {
         @Override
         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+            String model = Build.MODEL.toLowerCase();
+            if (model.contains("oneplus") && model.contains("3"))
+                return;
             Dialog mDialog = (Dialog) XposedHelpers.getObjectField(param.thisObject, "mDialog");
             ViewGroup mDialogView = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mDialogView");
             Context context = mDialogView.getContext();
@@ -1244,7 +1247,7 @@ public class NotificationHooks {
                         Context context = action.getContext();
                         ResourceUtils res = ResourceUtils.getInstance(context);
                         int width_height = res.getDimensionPixelSize(R.dimen.notification_media_action_width);
-                        RelativeLayout.LayoutParams lParams = new RelativeLayout.LayoutParams(width_height,width_height);
+                        RelativeLayout.LayoutParams lParams = new RelativeLayout.LayoutParams(width_height, width_height);
                         lParams.setMarginEnd(res.getDimensionPixelSize(R.dimen.notification_media_action_margin));
                         int padding = ResourceUtils.getInstance(context).getDimensionPixelSize(R.dimen.notification_media_action_padding);
                         action.setPadding(0, padding, 0, padding);
