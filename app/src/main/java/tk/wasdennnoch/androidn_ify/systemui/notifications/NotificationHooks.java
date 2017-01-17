@@ -655,8 +655,7 @@ public class NotificationHooks {
     private static final XC_MethodHook updateWindowWidthHHook = new XC_MethodHook() {
         @Override
         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-            String model = Build.MODEL.toLowerCase();
-            if (model.contains("oneplus") && model.contains("3"))
+            if(ConfigUtils.OxygenOS)
                 return;
             Dialog mDialog = (Dialog) XposedHelpers.getObjectField(param.thisObject, "mDialog");
             ViewGroup mDialogView = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mDialogView");
