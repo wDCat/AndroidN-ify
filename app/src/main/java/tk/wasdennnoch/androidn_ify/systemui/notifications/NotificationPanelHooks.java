@@ -167,13 +167,9 @@ public class NotificationPanelHooks {
     }
 
     public static int getStatusBarState() {
-<<<<<<< HEAD
-        if(mNotificationPanelView==null)return 0;
-=======
         if (mNotificationPanelView == null) {
             return 0;
         }
->>>>>>> upstream/master
         return XposedHelpers.getIntField(mNotificationPanelView, "mStatusBarState");
     }
 

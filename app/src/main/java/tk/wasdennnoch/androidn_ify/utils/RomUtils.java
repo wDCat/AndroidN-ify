@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.SystemProperties;
 import android.preference.PreferenceManager;
 
+import android.util.Log;
 import com.crossbowffs.remotepreferences.RemotePreferences;
 
 import de.robv.android.xposed.XSharedPreferences;
@@ -73,15 +74,6 @@ public class RomUtils {
                 return true;
             default:
                 return false;
-        }
-    }
-
-    public static boolean isOxygenOS() {
-        try {
-            int buff = Runtime.getRuntime().exec("getprop ro.oxygen.version").getInputStream().read();
-            return 0x30 < buff && buff < 0x39;
-        } catch (Exception e) {
-            return false;
         }
     }
 
