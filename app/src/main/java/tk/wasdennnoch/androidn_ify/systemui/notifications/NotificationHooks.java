@@ -70,7 +70,11 @@ import tk.wasdennnoch.androidn_ify.systemui.notifications.stack.NotificationStac
 import tk.wasdennnoch.androidn_ify.systemui.notifications.views.RemoteInputHelper;
 import tk.wasdennnoch.androidn_ify.systemui.qs.customize.QSCustomizer;
 import tk.wasdennnoch.androidn_ify.systemui.statusbar.StatusBarHooks;
-import tk.wasdennnoch.androidn_ify.utils.*;
+import tk.wasdennnoch.androidn_ify.utils.ConfigUtils;
+import tk.wasdennnoch.androidn_ify.utils.RemoteMarginLinearLayout;
+import tk.wasdennnoch.androidn_ify.utils.ResourceUtils;
+import tk.wasdennnoch.androidn_ify.utils.RomUtils;
+import tk.wasdennnoch.androidn_ify.utils.ViewUtils;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -355,7 +359,12 @@ public class NotificationHooks {
         boolean colorable = true;
         int color = NotificationHeaderView.NO_COLOR;
         Context context = (Context) XposedHelpers.getObjectField(builder, "mContext");
-        if ((boolean) XposedHelpers.callMethod(builder, "isLegacy")) {
+        boolean legacy = false;
+        try {
+            legacy = (boolean) XposedHelpers.callMethod(builder, "isLegacy");
+        } catch (Throwable ignore) {
+        }
+        if (legacy) {
             Object mColorUtil = XposedHelpers.getObjectField(builder, "mColorUtil");
             Object mSmallIcon = XposedHelpers.getObjectField(builder, "mSmallIcon"); // Icon if Marshmallow, int if Lollipop. So we shouldn't specify which type is this.
             if (!(boolean) XposedHelpers.callMethod(mColorUtil, "isGrayscaleIcon", context, mSmallIcon)) {
@@ -500,7 +509,12 @@ public class NotificationHooks {
     private static final XC_MethodHook processSmallIconAsLargeHook = new XC_MethodReplacement() {
         @Override
         protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
-            if (!((boolean) XposedHelpers.callMethod(methodHookParam.thisObject, "isLegacy"))) {
+            boolean legacy = false;
+            try {
+                legacy = ((boolean) XposedHelpers.callMethod(methodHookParam.thisObject, "isLegacy"));
+            } catch (Throwable ignore) {
+            }
+            if (!legacy) {
                 RemoteViews contentView = (RemoteViews) methodHookParam.args[1];
                 int mColor = (int) XposedHelpers.callMethod(methodHookParam.thisObject, "resolveColor");
                 XposedHelpers.callMethod(contentView, "setDrawableParameters",
@@ -652,8 +666,9 @@ public class NotificationHooks {
     private static final XC_MethodHook updateWindowWidthHHook = new XC_MethodHook() {
         @Override
         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-            if (RomUtils.isOxygenOS())
+            if (RomUtils.isOneplusStock()) {
                 return;
+            }
             Dialog mDialog = (Dialog) XposedHelpers.getObjectField(param.thisObject, "mDialog");
             ViewGroup mDialogView = (ViewGroup) XposedHelpers.getObjectField(param.thisObject, "mDialogView");
             Context context = mDialogView.getContext();
